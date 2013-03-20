@@ -1,16 +1,22 @@
-
 # 编译 #
 
-从`https://github.com/lintool/Mr.LDA`下载Mr.LDA.zip, 运行:
+从`https://github.com/lintool/Mr.LDA`下载并编译:
 
-    cocktail@linux-nlp:~/proj/soft> unzip Mr.LDA.zip
-    cocktail@linux-nlp:~/proj/soft> cd Mr.LDA 
-    cocktail@linux-nlp:~/proj/soft/Mr.LDA> ant
+    qkjd@qkjd-virtual-machine:~/proj/thirdparty$ git clone http://github.com/lintool/Mr.LDA.git 
+    Cloning into 'Mr.LDA'...
+    remote: Counting objects: 640, done.
+    remote: Compressing objects: 100% (230/230), done.
+    remote: Total 640 (delta 270), reused 624 (delta 255)
+    Receiving objects: 100% (640/640), 244.05 KiB | 110 KiB/s, done.
+    Resolving deltas: 100% (270/270), done.
+    
+    qkjd@qkjd-virtual-machine:~/proj/thirdparty$ cd Mr.LDA/
+    qkjd@qkjd-virtual-machine:~/proj/thirdparty/Mr.LDA$ ant
     ...
     BUILD SUCCESSFUL
     Total time: 4 seconds
   
-    cocktail@linux-nlp:~/proj/soft/Mr.LDA> ant export
+    qkjd@qkjd-virtual-machine:~/proj/thirdparty/Mr.LDA$ ant export
     ...
     export:
       Building jar: /home/cocktail/proj/soft/Mr.LDA/bin/Mr.LDA-0.0.1.jar
@@ -18,10 +24,10 @@
     BUILD SUCCESSFUL
     Total time: 38 seconds
   
-    cocktail@linux-nlp:~/proj/soft/Mr.LDA> ll bin
+    qkjd@qkjd-virtual-machine:~/proj/thirdparty/Mr.LDA$ ll bin
     total 22438
     -rw-r--r-- 1 cocktail users 22951880 2013-03-20 17:12 Mr.LDA-0.0.1.jar
-  
+
 # 准备语料 #
 
   Mr. LDA takes raw text file as input, every row in the text file represents a stand-alone document. 
