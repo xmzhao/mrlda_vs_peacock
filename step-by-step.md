@@ -71,6 +71,19 @@ separated by a space (' '). The raw input text file should look like this:
     doc8	电脑 ipad
     doc9	果汁 树
 
+若原始语料格式不包括title字段, 可以通过如下map-only job将title字段添加上, fmt_peacock2mrlda_mapper.py:
+
+    #!/usr/bin/env python
+
+    import sys
+    import md5
+
+    if __name__ == '__main__':
+      for l in sys.stdin:
+        title = md5.new(l).digest().encode('hex')
+        content = l.replace('\t', ' ')  # content之前以'\t'分割tokens
+        print >> sys.stdout, "%s\t%s" % (title, content) ,
+
 # 转化为训练程序需要格式 #
 
 将文件`test-corpus.txt`上传到hdfs, 使用工具`ParseCorpus`生成训练程序`VariationalInference`需要的语料格式.
