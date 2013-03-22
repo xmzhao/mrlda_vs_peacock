@@ -2,8 +2,8 @@
 
 HADOOP_HOME=/data/users/hadoop/hadoop
 MAPPER=./fmt_peacock2mrlda_mapper.py
-INPUT=/user/tad/peacock/sosoquery-1k/corpus/part*
-OUTPUT=/user/test/xueminzhao/mrlda/sosoquerylog/raw_corpus
+INPUT=/corpus/part*
+OUTPUT=/raw_corpus
 NUM_REDUCE_TASKS=0
 
 hadoop fs -rmr $OUTPUT
