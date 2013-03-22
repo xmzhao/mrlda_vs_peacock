@@ -335,7 +335,7 @@ Beta文件的格式应该是sequence file:
 
 ### errors ###
 
-当训练语料较大时，在`ParseCorpus`任务的``阶段, 会出现如下错误:
+当训练语料较大时，在`ParseCorpus`任务的`ParseCorpus - index document`阶段, 会出现如下错误:
 
     13/03/22 13:09:45 INFO mapred.JobClient:  map 0% reduce 0%
     13/03/22 13:15:50 INFO mapred.JobClient: Task Id : attempt_201303110957_5129_m_000058_0, Status : FAILED
