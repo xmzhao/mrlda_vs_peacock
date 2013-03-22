@@ -1,5 +1,4 @@
-
-dir=/user/test/xueminzhao/mrlda/sosoquerylog/raw_corpus
+dir=/raw_corpus
 for i in `seq 0 199`; do
   filename=`printf "part-%05d" $i`
   path=$dir/$filename
