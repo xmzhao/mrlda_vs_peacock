@@ -54,6 +54,10 @@ separated by a space (' '). The raw input text file should look like this:
 
 * `Content`由tokens组成, tokens之间用` `分割, token中不允许包含` `.
 
+注意: hadoop不支持gbk, 中文文件一定要是`utf-8`. gbk编码的文件可以通过如下命令转换为`utf-8`:
+
+    iconv -f CP936 -t UTF-8 src-gbk >dest-utf8
+
 示例如下`test-corpus.zh.txt`文件:
 
     doc0	苹果 电脑
