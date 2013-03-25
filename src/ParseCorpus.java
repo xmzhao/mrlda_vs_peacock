@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.Random;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -527,8 +528,9 @@ public class ParseCorpus extends Configured implements Tool {
   public static class IndexDocumentMapper extends MapReduceBase implements
       Mapper<Text, HMapSIW, IntWritable, Document> {
     private static Map<String, Integer> termIndex = null;
-    private static Map<String, Integer> titleIndex = null;
-
+    //private static Map<String, Integer> titleIndex = null;
+    private Random rng = new Random();
+    
     private IntWritable index = new IntWritable();
     private Document document = new Document();
     private HMapII content = new HMapII();
@@ -539,8 +541,8 @@ public class ParseCorpus extends Configured implements Tool {
     @SuppressWarnings("deprecation")
     public void map(Text key, HMapSIW value, OutputCollector<IntWritable, Document> output,
         Reporter reporter) throws IOException {
-      Preconditions.checkArgument(titleIndex.containsKey(key.toString()),
-          "How embarrassing! Could not find title " + temp + " in index...");
+      //Preconditions.checkArgument(titleIndex.containsKey(key.toString()),
+      //    "How embarrassing! Could not find title " + temp + " in index...");
       content.clear();
       itr = value.keySet().iterator();
       while (itr.hasNext()) {
@@ -558,7 +560,8 @@ public class ParseCorpus extends Configured implements Tool {
       }
 
       reporter.incrCounter(MyCounter.LEFT_OVER_DOCUMENTS, 1);
-      index.set(titleIndex.get(key.toString()));
+      //index.set(titleIndex.get(key.toString()));
+      index.set(rng.nextInt());
       document.setDocument(content);
       output.collect(index, document);
     }
@@ -579,9 +582,9 @@ public class ParseCorpus extends Configured implements Tool {
                 termIndex = ParseCorpus.importParameter(sequenceFileReader);
               }
               if (path.getName().startsWith(TITLE)) {
-                Preconditions.checkArgument(titleIndex == null,
-                    "Title index was initialized already...");
-                titleIndex = ParseCorpus.importParameter(sequenceFileReader);
+                //Preconditions.checkArgument(titleIndex == null,
+                //    "Title index was initialized already...");
+                //titleIndex = ParseCorpus.importParameter(sequenceFileReader);
               } else {
                 throw new IllegalArgumentException("Unexpected file in distributed cache: "
                     + path.getName());
