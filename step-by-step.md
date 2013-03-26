@@ -204,6 +204,81 @@ Take note that the word index starts from 1, whereas index 0 is reserved for sys
     ----------------------------------------
     5 records read.
 
+### OOM Error ###
+
+当训练语料较大时，在`ParseCorpus`任务的`ParseCorpus - index document`阶段, 会出现如下错误:
+
+    13/03/22 13:09:45 INFO mapred.JobClient:  map 0% reduce 0%
+    13/03/22 13:15:50 INFO mapred.JobClient: Task Id : attempt_201303110957_5129_m_000058_0, Status : FAILED
+    java.lang.RuntimeException: Error in configuring object
+        at org.apache.hadoop.util.ReflectionUtils.setJobConf(ReflectionUtils.java:93)
+    	at org.apache.hadoop.util.ReflectionUtils.setConf(ReflectionUtils.java:64)
+    	at org.apache.hadoop.util.ReflectionUtils.newInstance(ReflectionUtils.java:117)
+    	at org.apache.hadoop.mapred.MapTask.runOldMapper(MapTask.java:354)
+    	at org.apache.hadoop.mapred.MapTask.run(MapTask.java:307)
+    	at org.apache.hadoop.mapred.Child.main(Child.java:159)
+    Caused by: java.lang.reflect.InvocationTargetException
+    	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+    	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+    	at java.lang.reflect.Method.invoke(Method.java:597)
+    	at org.apache.hadoop.util.ReflectionUtils.setJobConf(ReflectionUtils.java:88)
+    	... 5 more
+    Caused by: java.lang.RuntimeException: Error in configuring object
+    	at org.apache.hadoop.util.ReflectionUtils.setJobConf(ReflectionUtils.java:93)
+    	at org.apache.hadoop.util.ReflectionUtils.setConf(ReflectionUtils.java:64)
+    	at org.apache.hadoop.util.ReflectionUtils.newInstance(ReflectionUtils.java:117)
+    	at org.apache.hadoop.mapred.MapRunner.configure(MapRunner.java:34)
+    	... 10 more
+    Caused by: java.lang.reflect.InvocationTargetException
+    	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+    	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+    	at java.lang.reflect.Method.invoke(Method.java:597)
+    	at org.apache.hadoop.util.ReflectionUtils.setJobConf(ReflectionUtils.java:88)
+    	... 13 more
+    Caused by: java.lang.OutOfMemoryError: Java heap space
+    	at java.nio.ByteBuffer.wrap(ByteBuffer.java:350)
+    	at org.apache.hadoop.io.Text.decode(Text.java:327)
+    	at org.apache.hadoop.io.Text.toString(Text.java:254)
+    	at cc.mrlda.ParseCorpus.importParameter(ParseCorpus.java:682)
+    	at cc.mrlda.ParseCorpus$IndexDocumentMapper.configure(ParseCorpus.java:584)
+    	... 18 more
+    
+    attempt_201303110957_5129_m_000058_0: java.lang.IllegalArgumentException: Unexpected file in distributed cache: term
+    attempt_201303110957_5129_m_000058_0: 	at cc.mrlda.ParseCorpus$IndexDocumentMapper.configure(ParseCorpus.java:586)
+    attempt_201303110957_5129_m_000058_0: 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    attempt_201303110957_5129_m_000058_0: 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+    attempt_201303110957_5129_m_000058_0: 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+    attempt_201303110957_5129_m_000058_0: 	at java.lang.reflect.Method.invoke(Method.java:597)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.util.ReflectionUtils.setJobConf(ReflectionUtils.java:88)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.util.ReflectionUtils.setConf(ReflectionUtils.java:64)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.util.ReflectionUtils.newInstance(ReflectionUtils.java:117)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.MapRunner.configure(MapRunner.java:34)
+    attempt_201303110957_5129_m_000058_0: 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+    attempt_201303110957_5129_m_000058_0: 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+    attempt_201303110957_5129_m_000058_0: 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+    attempt_201303110957_5129_m_000058_0: 	at java.lang.reflect.Method.invoke(Method.java:597)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.util.ReflectionUtils.setJobConf(ReflectionUtils.java:88)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.util.ReflectionUtils.setConf(ReflectionUtils.java:64)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.util.ReflectionUtils.newInstance(ReflectionUtils.java:117)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.MapTask.runOldMapper(MapTask.java:354)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.MapTask.run(MapTask.java:307)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.Child.main(Child.java:159)
+    attempt_201303110957_5129_m_000058_0: Exception in thread "Thread for syncLogs" java.lang.OutOfMemoryError: Java heap space
+    attempt_201303110957_5129_m_000058_0: 	at java.lang.StringBuffer.toString(StringBuffer.java:585)
+    attempt_201303110957_5129_m_000058_0: 	at java.text.NumberFormat.format(NumberFormat.java:280)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapreduce.TaskID.appendTo(TaskID.java:133)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapreduce.TaskAttemptID.appendTo(TaskAttemptID.java:109)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapreduce.TaskAttemptID.toString(TaskAttemptID.java:141)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.TaskLog.writeToIndexFile(TaskLog.java:229)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.TaskLog.syncLogs(TaskLog.java:281)
+    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.Child$2.run(Child.java:90)
+    13/03/22 13:20:43 INFO mapred.JobClient: Task Id : attempt_201303110957_5129_m_000022_0, Status : FAILED
+    Task attempt_201303110957_5129_m_000022_0 failed to report status for 601 seconds. Killing!
+
+原因: `IndexDocumentMapper` class 中加载了`titleIndex`, 当num_docs非常大时, 造成OOM. 去掉对`titleIndex`
+加载即可, 修改后的代码见src目录.
 
 # 训练 #
 
@@ -332,80 +407,6 @@ Beta文件的格式应该是sequence file:
     电脑		1.5543580055236816
     ipad		1.3614717721939087
     苹果		0.9640975594520569
-
-### errors ###
-
-当训练语料较大时，在`ParseCorpus`任务的`ParseCorpus - index document`阶段, 会出现如下错误:
-
-    13/03/22 13:09:45 INFO mapred.JobClient:  map 0% reduce 0%
-    13/03/22 13:15:50 INFO mapred.JobClient: Task Id : attempt_201303110957_5129_m_000058_0, Status : FAILED
-    java.lang.RuntimeException: Error in configuring object
-        at org.apache.hadoop.util.ReflectionUtils.setJobConf(ReflectionUtils.java:93)
-    	at org.apache.hadoop.util.ReflectionUtils.setConf(ReflectionUtils.java:64)
-    	at org.apache.hadoop.util.ReflectionUtils.newInstance(ReflectionUtils.java:117)
-    	at org.apache.hadoop.mapred.MapTask.runOldMapper(MapTask.java:354)
-    	at org.apache.hadoop.mapred.MapTask.run(MapTask.java:307)
-    	at org.apache.hadoop.mapred.Child.main(Child.java:159)
-    Caused by: java.lang.reflect.InvocationTargetException
-    	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-    	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-    	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-    	at java.lang.reflect.Method.invoke(Method.java:597)
-    	at org.apache.hadoop.util.ReflectionUtils.setJobConf(ReflectionUtils.java:88)
-    	... 5 more
-    Caused by: java.lang.RuntimeException: Error in configuring object
-    	at org.apache.hadoop.util.ReflectionUtils.setJobConf(ReflectionUtils.java:93)
-    	at org.apache.hadoop.util.ReflectionUtils.setConf(ReflectionUtils.java:64)
-    	at org.apache.hadoop.util.ReflectionUtils.newInstance(ReflectionUtils.java:117)
-    	at org.apache.hadoop.mapred.MapRunner.configure(MapRunner.java:34)
-    	... 10 more
-    Caused by: java.lang.reflect.InvocationTargetException
-    	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-    	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-    	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-    	at java.lang.reflect.Method.invoke(Method.java:597)
-    	at org.apache.hadoop.util.ReflectionUtils.setJobConf(ReflectionUtils.java:88)
-    	... 13 more
-    Caused by: java.lang.OutOfMemoryError: Java heap space
-    	at java.nio.ByteBuffer.wrap(ByteBuffer.java:350)
-    	at org.apache.hadoop.io.Text.decode(Text.java:327)
-    	at org.apache.hadoop.io.Text.toString(Text.java:254)
-    	at cc.mrlda.ParseCorpus.importParameter(ParseCorpus.java:682)
-    	at cc.mrlda.ParseCorpus$IndexDocumentMapper.configure(ParseCorpus.java:584)
-    	... 18 more
-    
-    attempt_201303110957_5129_m_000058_0: java.lang.IllegalArgumentException: Unexpected file in distributed cache: term
-    attempt_201303110957_5129_m_000058_0: 	at cc.mrlda.ParseCorpus$IndexDocumentMapper.configure(ParseCorpus.java:586)
-    attempt_201303110957_5129_m_000058_0: 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-    attempt_201303110957_5129_m_000058_0: 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-    attempt_201303110957_5129_m_000058_0: 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-    attempt_201303110957_5129_m_000058_0: 	at java.lang.reflect.Method.invoke(Method.java:597)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.util.ReflectionUtils.setJobConf(ReflectionUtils.java:88)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.util.ReflectionUtils.setConf(ReflectionUtils.java:64)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.util.ReflectionUtils.newInstance(ReflectionUtils.java:117)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.MapRunner.configure(MapRunner.java:34)
-    attempt_201303110957_5129_m_000058_0: 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-    attempt_201303110957_5129_m_000058_0: 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
-    attempt_201303110957_5129_m_000058_0: 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
-    attempt_201303110957_5129_m_000058_0: 	at java.lang.reflect.Method.invoke(Method.java:597)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.util.ReflectionUtils.setJobConf(ReflectionUtils.java:88)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.util.ReflectionUtils.setConf(ReflectionUtils.java:64)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.util.ReflectionUtils.newInstance(ReflectionUtils.java:117)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.MapTask.runOldMapper(MapTask.java:354)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.MapTask.run(MapTask.java:307)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.Child.main(Child.java:159)
-    attempt_201303110957_5129_m_000058_0: Exception in thread "Thread for syncLogs" java.lang.OutOfMemoryError: Java heap space
-    attempt_201303110957_5129_m_000058_0: 	at java.lang.StringBuffer.toString(StringBuffer.java:585)
-    attempt_201303110957_5129_m_000058_0: 	at java.text.NumberFormat.format(NumberFormat.java:280)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapreduce.TaskID.appendTo(TaskID.java:133)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapreduce.TaskAttemptID.appendTo(TaskAttemptID.java:109)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapreduce.TaskAttemptID.toString(TaskAttemptID.java:141)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.TaskLog.writeToIndexFile(TaskLog.java:229)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.TaskLog.syncLogs(TaskLog.java:281)
-    attempt_201303110957_5129_m_000058_0: 	at org.apache.hadoop.mapred.Child$2.run(Child.java:90)
-    13/03/22 13:20:43 INFO mapred.JobClient: Task Id : attempt_201303110957_5129_m_000022_0, Status : FAILED
-    Task attempt_201303110957_5129_m_000022_0 failed to report status for 601 seconds. Killing!
-
 
 xueminzhao
 3/21/2013
