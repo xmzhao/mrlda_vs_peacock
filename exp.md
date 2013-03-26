@@ -30,6 +30,12 @@ time: 33h15min
 
 ![logllhood curve](images/exp1-logllhood.png)
 
+[topic top words of iteration 40](ttw/exp1-ttw.40)
+
+[topic top words of iteration 100](ttw/exp1-ttw.100)
+
+[topic top words of iteration 200](ttw/exp1-ttw.200)
+
 [topic top words of iteration 500](ttw/exp1-ttw.500)
 
 # Experiment 2 #
